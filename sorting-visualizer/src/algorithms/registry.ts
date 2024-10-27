@@ -3,13 +3,15 @@ import { bubbleSort } from './bubbleSort';
 import { selectionSort } from './selectionSort';
 import { SortingAlgorithm } from '../types/sortingTypes';
 
+interface AlgorithmRegistryItem {
+  component: SortingAlgorithm;
+  path: string;
+  title: string;
+  description: string;
+}
+
 interface AlgorithmRegistry {
-  [key: string]: {
-    component: SortingAlgorithm;
-    path: string;
-    title: string;
-    description: string;
-  };
+  [key: string]: AlgorithmRegistryItem;
 }
 
 export const algorithmRegistry: AlgorithmRegistry = {

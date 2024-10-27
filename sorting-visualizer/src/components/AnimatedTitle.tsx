@@ -13,6 +13,7 @@ const AnimatedTitle = () => {
   const [characters, setCharacters] = useState<CharacterState[]>([]);
   const [isSorting, setIsSorting] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(true);
 
   // Initialize scrambled text
   useEffect(() => {
@@ -33,6 +34,12 @@ const AnimatedTitle = () => {
     setTimeout(() => setIsSorting(true), 500);
   }, []);
 
+  // Check if text is sorted
+  const checkIfSorted = (array: CharacterState[]) => {
+    const currentText = array.map((char) => char.char).join("");
+    return currentText === targetText;
+  };
+
   useEffect(() => {
     if (!isSorting) return;
 
@@ -44,11 +51,8 @@ const AnimatedTitle = () => {
       if (start < end) {
         const mid = Math.floor(start + (end - start) / 2);
 
-        // Recursively sort first and second halves
         await mergeSort(array, start, mid);
         await mergeSort(array, mid + 1, end);
-
-        // Merge the sorted halves
         await merge(array, start, mid, end);
       }
     };
@@ -67,7 +71,6 @@ const AnimatedTitle = () => {
         k = start;
 
       while (i < leftArray.length && j < rightArray.length) {
-        // Highlight elements being compared
         array[k].isComparing = true;
         setCharacters([...array]);
         await new Promise((resolve) => setTimeout(resolve, 50));
@@ -89,7 +92,6 @@ const AnimatedTitle = () => {
         setCharacters([...array]);
       }
 
-      // Copy remaining elements
       while (i < leftArray.length) {
         array[k] = leftArray[i];
         if (array[k].originalIndex === k) {
@@ -109,42 +111,60 @@ const AnimatedTitle = () => {
         k++;
         setCharacters([...array]);
       }
+
+      // Check if the entire array is sorted after each merge
+      if (checkIfSorted(array)) {
+        await new Promise((resolve) => setTimeout(resolve, 300));
+        setIsComplete(true);
+        setIsSorting(false);
+        setTimeout(() => {
+          setIsAnimating(false);
+        }, 600);
+      }
     };
 
-    const startSort = async () => {
+    const startSorting = async () => {
       const arrayToSort = [...characters];
       await mergeSort(arrayToSort, 0, arrayToSort.length - 1);
-
-      // Brief pause before returning to white
-      await new Promise((resolve) => setTimeout(resolve, 300));
-      setIsComplete(true);
-      setIsSorting(false);
     };
 
-    startSort();
+    startSorting();
   }, [isSorting, characters]);
 
   return (
-    <div className="flex justify-center space-x-1">
-      {characters.map((char, index) => (
-        <span
-          key={index}
-          className={`
-            text-6xl md:text-7xl font-bold transition-all duration-200
-            ${
-              isComplete
-                ? "text-white"
-                : char.isComparing
-                ? "text-yellow-500 transform scale-110"
-                : char.isCorrect
-                ? "text-green-500"
-                : "text-white"
-            }
-          `}
-        >
-          {char.char}
-        </span>
-      ))}
+    <div className="relative h-[200px]">
+      <div
+        className={`
+          flex justify-center space-x-1
+          transition-all duration-700 ease-in-out
+          ${
+            isAnimating
+              ? "transform -translate-y-6 scale-110 tracking-wider"
+              : "transform translate-y-0 scale-100 tracking-normal"
+          }
+        `}
+      >
+        {characters.map((char, index) => (
+          <span
+            key={index}
+            className={`
+              text-6xl md:text-7xl font-bold
+              transition-all duration-200
+              ${
+                isComplete
+                  ? "text-white"
+                  : char.isComparing
+                  ? "text-yellow-500 transform scale-110"
+                  : char.isCorrect
+                  ? "text-green-500"
+                  : "text-white"
+              }
+            `}
+          >
+            {char.char}
+          </span>
+        ))}
+      </div>
     </div>
   );
 };

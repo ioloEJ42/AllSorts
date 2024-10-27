@@ -1,7 +1,9 @@
 import { Link } from "react-router-dom";
 import AnimatedTitle from "../components/AnimatedTitle";
+import { algorithmRegistry } from "../algorithms/registry";
 
 const HomePage = () => {
+  const algorithms = Object.values(algorithmRegistry).map((algo) => algo.title);
   return (
     <div className="min-h-screen bg-black">
       {/* Dotted background pattern */}
@@ -24,7 +26,7 @@ const HomePage = () => {
           free · fast · efficient · also free
         </p>
         <Link
-          to="/visualizer"
+          to="/explore"
           className="mt-12 px-8 py-3 border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 ease-in-out"
         >
           Start Exploring
@@ -107,14 +109,5 @@ const FeatureCard = ({ title, description, icon }: FeatureCardProps) => {
     </div>
   );
 };
-
-const algorithms = [
-  "Bubble Sort",
-  "Quick Sort",
-  "Merge Sort",
-  "Heap Sort",
-  "Insertion Sort",
-  "Selection Sort",
-];
 
 export default HomePage;

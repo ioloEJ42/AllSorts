@@ -1,5 +1,4 @@
-// src/components/AlgorithmTemplate.tsx
-import React, { useState, useEffect, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ArrayBar, SortingAlgorithm } from "../types/sortingTypes";
 
@@ -13,7 +12,7 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
   const [isSorting, setIsSorting] = useState(false);
   const [timeTaken, setTimeTaken] = useState<number>(0);
   const [delay, setDelay] = useState<number>(50);
-  const [shouldRegenerate, setShouldRegenerate] = useState(true); // New state to control regeneration
+  const [shouldRegenerate, setShouldRegenerate] = useState(true);
 
   const generateArray = useCallback(() => {
     const newArray: ArrayBar[] = [];
@@ -29,14 +28,14 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
       });
     }
     setArray(newArray);
-    setShouldRegenerate(false); // Reset the flag after generating
+    setShouldRegenerate(false);
   }, [arraySize]);
 
   const handleSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSize = e.target.value;
     if (/^\d*$/.test(newSize) && parseInt(newSize) <= 200) {
       setArraySize(newSize);
-      setShouldRegenerate(true); // Set flag to regenerate array
+      setShouldRegenerate(true);
     }
   };
 
@@ -61,19 +60,40 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
     }
   }, [shouldRegenerate, isSorting, generateArray]);
 
+  useEffect(() => {
+    document.title = `${algorithm.name} | All Sorts`;
+    return () => {
+      document.title = "All Sorts";
+    };
+  }, [algorithm.name]);
+
   return (
     <div className="bg-black text-white">
-      <section className="h-screen flex flex-col">
-        <nav className="border-b border-gray-800 px-4">
+      {/* Visualization Section */}
+      <section className="relative min-h-screen">
+        {/* Dotted background pattern */}
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle, #808080 1px, transparent 1px)`,
+            backgroundSize: "30px 30px",
+            opacity: 0.3,
+          }}
+        />
+
+        {/* Navigation */}
+        <nav className="relative border-b border-gray-800 px-4">
           <div className="max-w-7xl mx-auto flex justify-between h-16 items-center">
-            <Link to="/" className="text-xl font-semibold">
+            <Link to="/explore" className="text-xl font-semibold">
               All Sorts
             </Link>
             <h1 className="text-xl font-bold">{algorithm.name}</h1>
           </div>
         </nav>
 
-        <div className="flex-1 flex flex-col p-4">
+        {/* Main content */}
+        <div className="relative flex flex-col h-[calc(100vh-4rem)] p-4">
+          {/* Controls */}
           <div className="flex flex-wrap items-center gap-6 mb-6">
             <button
               onClick={handleRandomize}
@@ -137,8 +157,9 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
             </div>
           </div>
 
-          <div className="flex-1 border border-gray-800 rounded flex items-end justify-end gap-[2px] p-4 bg-zinc-900/50">
-            {array.map((bar, index) => (
+          {/* Array visualization container - now takes up remaining height */}
+          <div className="flex-1 border border-gray-800 rounded flex items-end justify-end gap-[2px] p-4 bg-zinc-900/75">
+            {array.map((bar: ArrayBar, index: number) => (
               <div
                 key={index}
                 className={`w-1 transition-all duration-200 ${
@@ -155,7 +176,7 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
         </div>
       </section>
 
-      {/* Information Section - Full Screen */}
+      {/* Information Section */}
       <section className="min-h-screen bg-zinc-900 px-4 py-16">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16">

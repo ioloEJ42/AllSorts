@@ -1,8 +1,16 @@
 // src/pages/VisualizerPage.tsx
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { algorithmRegistry } from "../algorithms/registry";
 
 const VisualizerPage = () => {
+  useEffect(() => {
+    document.title = "Explore Algorithms | All Sorts";
+    return () => {
+      document.title = "All Sorts";
+    };
+  }, []);
+
   return (
     <div className="min-h-screen bg-black">
       <nav className="border-b border-gray-800 px-4">
@@ -22,7 +30,7 @@ const VisualizerPage = () => {
           {Object.values(algorithmRegistry).map((algo) => (
             <Link
               key={algo.path}
-              to={`/visualizer/${algo.path}`}
+              to={`/explore/${algo.path}`}
               className="block p-6 border border-gray-800 hover:border-gray-700 transition-colors rounded-lg"
             >
               <h2 className="text-2xl font-bold text-white mb-3">

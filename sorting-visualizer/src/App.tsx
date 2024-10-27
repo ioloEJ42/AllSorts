@@ -9,8 +9,8 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/visualizer" element={<VisualizerPage />} />
-        <Route path="/visualizer/:algorithmId" element={<AlgorithmPage />} />
+        <Route path="/explore" element={<VisualizerPage />} />
+        <Route path="/explore/:algorithmId" element={<AlgorithmPage />} />
       </Routes>
     </Router>
   );

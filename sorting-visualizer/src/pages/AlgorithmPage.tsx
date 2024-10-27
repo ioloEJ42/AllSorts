@@ -12,7 +12,7 @@ const AlgorithmPage = () => {
   );
 
   if (!algorithm) {
-    return <Navigate to="/visualizer" replace />;
+    return <Navigate to="/explore" replace />;
   }
 
   return <AlgorithmTemplate algorithm={algorithm.component} />;
