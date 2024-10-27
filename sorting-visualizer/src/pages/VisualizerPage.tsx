@@ -1,15 +1,14 @@
+// src/pages/VisualizerPage.tsx
 import { Link } from "react-router-dom";
 
 const VisualizerPage = () => {
   return (
     <div className="min-h-screen bg-black">
-      <nav className="border-b border-gray-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16 items-center">
-            <Link to="/" className="text-xl font-semibold text-white">
-              All Sorts
-            </Link>
-          </div>
+      <nav className="border-b border-gray-800 px-4">
+        <div className="max-w-7xl mx-auto flex justify-between h-16 items-center">
+          <Link to="/" className="text-xl font-semibold text-white">
+            All Sorts
+          </Link>
         </div>
       </nav>
 
@@ -24,6 +23,13 @@ const VisualizerPage = () => {
             description="A simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order."
             complexity="O(n²)"
             link="/visualizer/bubble-sort"
+          />
+
+          <AlgorithmCard
+            title="Selection Sort"
+            description="Works by repeatedly finding the minimum element from the unsorted portion and placing it at the beginning of the sorted portion."
+            complexity="O(n²)"
+            link="/visualizer/selection-sort"
           />
           {/* Add more algorithm cards here as we implement them */}
         </div>
