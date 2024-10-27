@@ -1,73 +1,54 @@
 // src/algorithms/bubbleSort.ts
 import { ArrayBar, SortingAlgorithm } from '../types/sortingTypes';
+import { createSortingAlgorithm } from '../utils/sortingWrapper';
 
-interface ErrorWithName extends Error {
-  name: string;
-}
+const bubbleSortLogic = async (
+  array: ArrayBar[],
+  updateArray: (newArray: ArrayBar[]) => void,
+  delay: () => Promise<void>
+) => {
+  const n = array.length;
+
+  for (let i = 0; i < n - 1; i++) {
+    let swapped = false;
+
+    for (let j = 0; j < n - i - 1; j++) {
+      array[j].isComparing = true;
+      array[j + 1].isComparing = true;
+      updateArray([...array]);
+
+      await delay();
+
+      if (array[j].height > array[j + 1].height) {
+        [array[j], array[j + 1]] = [array[j + 1], array[j]];
+        swapped = true;
+      }
+
+      array[j].isComparing = false;
+      array[j + 1].isComparing = false;
+      updateArray([...array]);
+    }
+
+    array[n - 1 - i].isSorted = true;
+
+    // If no swapping occurred, array is sorted
+    if (!swapped) {
+      // Mark remaining elements as sorted
+      for (let k = 0; k < n - i - 1; k++) {
+        array[k].isSorted = true;
+      }
+      break;
+    }
+  }
+
+  // Ensure first element is marked as sorted
+  array[0].isSorted = true;
+  updateArray([...array]);
+};
 
 export const bubbleSort: SortingAlgorithm = {
   name: "Bubble Sort",
-  execute: async (
-    array: ArrayBar[],
-    updateArray: (newArray: ArrayBar[]) => void,
-    setTimeTaken: (time: number) => void,
-    delay: number = 50,
-    signal?: AbortSignal
-  ) => {
-    const startTime = performance.now();
-    const arrayCopy = [...array];
-    try {
-      for (let i = 0; i < arrayCopy.length - 1; i++) {
-        if (signal?.aborted) {
-          throw new DOMException("Sorting aborted", "AbortError");
-        }
-
-        for (let j = 0; j < arrayCopy.length - i - 1; j++) {
-          if (signal?.aborted) {
-            throw new DOMException("Sorting aborted", "AbortError");
-          }
-
-          arrayCopy[j].isComparing = true;
-          arrayCopy[j + 1].isComparing = true;
-          updateArray([...arrayCopy]);
-
-          await new Promise<void>((resolve, reject) => {
-            const timeoutId = setTimeout(resolve, delay);
-            signal?.addEventListener('abort', () => {
-              clearTimeout(timeoutId);
-              reject(new DOMException("Sorting aborted", "AbortError"));
-            });
-          });
-
-          if (arrayCopy[j].height > arrayCopy[j + 1].height) {
-            [arrayCopy[j], arrayCopy[j + 1]] = [arrayCopy[j + 1], arrayCopy[j]];
-          }
-
-          arrayCopy[j].isComparing = false;
-          arrayCopy[j + 1].isComparing = false;
-          updateArray([...arrayCopy]);
-        }
-        
-        arrayCopy[arrayCopy.length - 1 - i].isSorted = true;
-      }
-
-      arrayCopy[0].isSorted = true;
-      updateArray([...arrayCopy]);
-      
-      const endTime = performance.now();
-      setTimeTaken(endTime - startTime);
-    } catch (error: unknown) {
-      const err = error as ErrorWithName;
-      if (err.name === 'AbortError') {
-        arrayCopy.forEach(bar => {
-          bar.isComparing = false;
-        });
-        updateArray([...arrayCopy]);
-        throw err;
-      }
-      throw err;
-    }
-  },
+  execute: createSortingAlgorithm(bubbleSortLogic),
   description: "Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if they are in the wrong order.",
   timeComplexity: {
     best: "O(n)",

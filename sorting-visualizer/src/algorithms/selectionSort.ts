@@ -1,72 +1,57 @@
 // src/algorithms/selectionSort.ts
 import { ArrayBar, SortingAlgorithm } from '../types/sortingTypes';
+import { createSortingAlgorithm } from '../utils/sortingWrapper';
+
+const selectionSortLogic = async (
+  array: ArrayBar[],
+  updateArray: (newArray: ArrayBar[]) => void,
+  delay: () => Promise<void>
+) => {
+  const n = array.length;
+
+  for (let i = 0; i < n - 1; i++) {
+    let minIdx = i;
+    array[i].isComparing = true;
+    updateArray([...array]);
+
+    for (let j = i + 1; j < n; j++) {
+      array[j].isComparing = true;
+      updateArray([...array]);
+      await delay(); // Use the provided delay function
+
+      if (array[j].height < array[minIdx].height) {
+        if (minIdx !== i) {
+          array[minIdx].isComparing = false;
+        }
+        minIdx = j;
+      } else {
+        if (j !== minIdx) {
+          array[j].isComparing = false;
+        }
+      }
+      updateArray([...array]);
+    }
+
+    if (minIdx !== i) {
+      [array[i], array[minIdx]] = [array[minIdx], array[i]];
+    }
+
+    array[i].isSorted = true;
+    array[i].isComparing = false;
+    if (minIdx !== i) {
+      array[minIdx].isComparing = false;
+    }
+    updateArray([...array]);
+  }
+
+  array[n - 1].isSorted = true;
+  updateArray([...array]);
+};
 
 export const selectionSort: SortingAlgorithm = {
   name: "Selection Sort",
-  execute: async (
-    array: ArrayBar[],
-    updateArray: (newArray: ArrayBar[]) => void,
-    setTimeTaken: (time: number) => void,
-    delay: number = 50
-  ) => {
-    const startTime = performance.now();
-    const arrayCopy = [...array];
-    const n = arrayCopy.length;
-
-    for (let i = 0; i < n - 1; i++) {
-      let minIdx = i;
-      
-      // Mark current position as being compared
-      arrayCopy[i].isComparing = true;
-      updateArray([...arrayCopy]);
-      
-      // Find the minimum element in the unsorted portion
-      for (let j = i + 1; j < n; j++) {
-        // Highlight current comparison
-        arrayCopy[j].isComparing = true;
-        updateArray([...arrayCopy]);
-        await new Promise(resolve => setTimeout(resolve, delay));
-        
-        if (arrayCopy[j].height < arrayCopy[minIdx].height) {
-          // Reset previous minimum's comparison state
-          if (minIdx !== i) {
-            arrayCopy[minIdx].isComparing = false;
-          }
-          minIdx = j;
-        } else {
-          // Reset current comparison if it's not the new minimum
-          if (j !== minIdx) {
-            arrayCopy[j].isComparing = false;
-          }
-        }
-        updateArray([...arrayCopy]);
-      }
-
-      // Swap the found minimum with the first element of unsorted portion
-      if (minIdx !== i) {
-        const temp = arrayCopy[i];
-        arrayCopy[i] = arrayCopy[minIdx];
-        arrayCopy[minIdx] = temp;
-      }
-
-      // Mark current position as sorted and reset comparison states
-      arrayCopy[i].isSorted = true;
-      arrayCopy[i].isComparing = false;
-      if (minIdx !== i) {
-        arrayCopy[minIdx].isComparing = false;
-      }
-      
-      updateArray([...arrayCopy]);
-    }
-
-    // Mark the last element as sorted
-    arrayCopy[n - 1].isSorted = true;
-    updateArray([...arrayCopy]);
-
-    const endTime = performance.now();
-    setTimeTaken(endTime - startTime);
-  },
-  description: "Selection Sort works by repeatedly finding the minimum element from the unsorted portion of the array and placing it at the beginning of the sorted portion.",
+  execute: createSortingAlgorithm(selectionSortLogic),
+  description: "Selection Sort works by repeatedly finding the minimum element...",
   timeComplexity: {
     best: "O(n²)",
     average: "O(n²)",
