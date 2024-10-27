@@ -1,3 +1,4 @@
+// src/types/sortingTypes.ts
 export interface ArrayBar {
   height: number;
   value: number;
@@ -11,7 +12,8 @@ export interface SortingAlgorithm {
     array: ArrayBar[],
     updateArray: (newArray: ArrayBar[]) => void,
     setTimeTaken: (time: number) => void,
-    delay?: number
+    delay?: number,
+    signal?: AbortSignal
   ) => Promise<void>;
   description: string;
   timeComplexity: {

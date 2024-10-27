@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrayBar, SortingAlgorithm } from "../types/sortingTypes";
 
@@ -13,6 +13,9 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
   const [timeTaken, setTimeTaken] = useState<number>(0);
   const [delay, setDelay] = useState<number>(50);
   const [shouldRegenerate, setShouldRegenerate] = useState(true);
+  const [isRunning, setIsRunning] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const sortStartTimeRef = useRef<number | null>(null);
 
   const generateArray = useCallback(() => {
     const newArray: ArrayBar[] = [];
@@ -39,10 +42,58 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
     }
   };
 
-  const handleSort = async () => {
-    setIsSorting(true);
-    await algorithm.execute(array, setArray, setTimeTaken, delay);
+  const stopSorting = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsRunning(false);
     setIsSorting(false);
+
+    // Update timer with elapsed time until stop
+    if (sortStartTimeRef.current) {
+      const elapsedTime = performance.now() - sortStartTimeRef.current;
+      setTimeTaken(elapsedTime);
+      sortStartTimeRef.current = null;
+    }
+  };
+
+  interface ErrorWithName extends Error {
+    name: string;
+  }
+
+  const handleSort = async () => {
+    if (isRunning) {
+      stopSorting();
+      return;
+    }
+
+    setIsRunning(true);
+    setIsSorting(true);
+
+    // Create new AbortController for this sorting run
+    abortControllerRef.current = new AbortController();
+    sortStartTimeRef.current = performance.now();
+
+    try {
+      await algorithm.execute(
+        array,
+        setArray,
+        setTimeTaken,
+        delay,
+        abortControllerRef.current.signal
+      );
+      setIsRunning(false);
+    } catch (error: unknown) {
+      const err = error as ErrorWithName; // Type assertion
+      if (err.name === "AbortError") {
+        // Sorting was stopped by user, do nothing
+      } else {
+        console.error("Sorting error:", err);
+      }
+    } finally {
+      setIsSorting(false);
+    }
   };
 
   const handleRandomize = () => {
@@ -66,6 +117,14 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
       document.title = "All Sorts";
     };
   }, [algorithm.name]);
+
+  useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, [algorithm]);
 
   return (
     <div className="bg-black text-white">
@@ -97,7 +156,7 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
           <div className="flex flex-wrap items-center gap-6 mb-6">
             <button
               onClick={handleRandomize}
-              disabled={isSorting}
+              disabled={isRunning}
               className="px-4 py-2 bg-white text-black hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Randomize Array
@@ -105,10 +164,15 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
 
             <button
               onClick={handleSort}
-              disabled={isSorting}
-              className="px-4 py-2 border border-white text-white hover:bg-white hover:text-black transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={isSorting && !isRunning} // Only disabled during transitions
+              className={`px-4 py-2 border transition-colors disabled:opacity-50 disabled:cursor-not-allowed
+          ${
+            isRunning
+              ? "bg-red-500 border-red-500 text-white hover:bg-red-600 hover:border-red-600"
+              : "border-white text-white hover:bg-white hover:text-black"
+          }`}
             >
-              Start Sorting
+              {isRunning ? "Stop Sorting" : "Start Sorting"}
             </button>
 
             <div className="flex items-center gap-4">
@@ -116,7 +180,7 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
               <select
                 value={delay}
                 onChange={handleSpeedChange}
-                disabled={isSorting}
+                disabled={isRunning}
                 className="bg-black border border-gray-800 text-white px-2 py-1 rounded focus:outline-none focus:border-gray-600"
               >
                 <option className="bg-black text-white" value="100">
