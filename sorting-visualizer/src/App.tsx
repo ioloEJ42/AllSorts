@@ -1,8 +1,8 @@
+// src/App.tsx
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import VisualizerPage from "./pages/VisualizerPage";
-import BubbleSort from "./pages/BubbleSort";
-import SelectionSort from "./pages/SelectionSort";
+import AlgorithmPage from "./pages/AlgorithmPage";
 
 function App() {
   return (
@@ -10,8 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/visualizer" element={<VisualizerPage />} />
-        <Route path="/visualizer/bubble-sort" element={<BubbleSort />} />
-        <Route path="/visualizer/selection-sort" element={<SelectionSort />} />
+        <Route path="/visualizer/:algorithmId" element={<AlgorithmPage />} />
       </Routes>
     </Router>
   );

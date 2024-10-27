@@ -1,40 +1,35 @@
-// src/pages/HomePage.tsx
 import { Link } from "react-router-dom";
-import { TypeWriter } from "../components/TypeWriter";
+import AnimatedTitle from "../components/AnimatedTitle";
 
 const HomePage = () => {
   return (
-    <div className="bg-black">
-      {/* Hero Section */}
-      <section className="relative min-h-screen">
-        {/* Dotted background pattern */}
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle, #808080 1px, transparent 1px)`,
-            backgroundSize: "30px 30px",
-            opacity: 0.3,
-          }}
-        />
+    <div className="min-h-screen bg-black">
+      {/* Dotted background pattern */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `radial-gradient(circle, #808080 1px, transparent 1px)`,
+          backgroundSize: "30px 30px",
+          opacity: 0.3,
+        }}
+      />
 
-        <div className="relative h-screen flex flex-col items-center justify-center px-4 text-center">
-          <h1 className="text-6xl md:text-7xl font-bold text-white mb-6">
-            <TypeWriter text="All Sorts" />
-          </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8">
-            Compare and visualise sorting algorithms
-          </p>
-          <p className="text-gray-400 font-mono">
-            free · fast · efficient · also free
-          </p>
-          <Link
-            to="/visualizer"
-            className="mt-12 px-8 py-3 border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 ease-in-out"
-          >
-            Start Exploring
-          </Link>
-        </div>
-      </section>
+      {/* Hero Section */}
+      <div className="relative min-h-screen flex flex-col items-center justify-center px-4 text-center">
+        <AnimatedTitle />
+        <p className="text-xl md:text-2xl text-gray-300 mt-8 mb-8">
+          Compare and visualise sorting algorithms
+        </p>
+        <p className="text-gray-400 font-mono">
+          free · fast · efficient · also free
+        </p>
+        <Link
+          to="/visualizer"
+          className="mt-12 px-8 py-3 border-2 border-white text-white hover:bg-white hover:text-black transition-all duration-300 ease-in-out"
+        >
+          Start Exploring
+        </Link>
+      </div>
 
       {/* Features Section - Also full height */}
       <section className="min-h-screen flex items-center justify-center bg-zinc-900">
