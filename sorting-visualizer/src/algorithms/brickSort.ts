@@ -9,13 +9,13 @@ const brickSortLogic = async (
 ) => {
   const n = array.length;
   let sorted = false;
-  
+
   while (!sorted) {
     sorted = true;
 
     // Odd phase (1, 3, 5, ...)
     for (let i = 1; i < n - 1; i += 2) {
-      // Highlight current pair
+      // Set comparing state for current pair
       array[i].isComparing = true;
       array[i + 1].isComparing = true;
       updateArray([...array]);
@@ -26,17 +26,23 @@ const brickSortLogic = async (
         [array[i], array[i + 1]] = [array[i + 1], array[i]];
         sorted = false;
         updateArray([...array]);
-        await delay();
+        await delay(); // Add delay after swap to make it visible
       }
 
-      // Reset highlighting
+      // Reset comparing state
       array[i].isComparing = false;
       array[i + 1].isComparing = false;
+      updateArray([...array]);
+
+      // Add delay between comparisons unless at the end
+      if (i < n - 3) {
+        await delay();
+      }
     }
 
     // Even phase (0, 2, 4, ...)
     for (let i = 0; i < n - 1; i += 2) {
-      // Highlight current pair
+      // Set comparing state for current pair
       array[i].isComparing = true;
       array[i + 1].isComparing = true;
       updateArray([...array]);
@@ -47,30 +53,39 @@ const brickSortLogic = async (
         [array[i], array[i + 1]] = [array[i + 1], array[i]];
         sorted = false;
         updateArray([...array]);
-        await delay();
+        await delay(); // Add delay after swap to make it visible
       }
 
-      // Reset highlighting
+      // Reset comparing state
       array[i].isComparing = false;
       array[i + 1].isComparing = false;
+      updateArray([...array]);
+
+      // Add delay between comparisons unless at the end
+      if (i < n - 3) {
+        await delay();
+      }
     }
 
-    // If array is sorted, mark all elements
+    // If array is sorted, progressively mark elements as sorted
     if (sorted) {
       for (let i = 0; i < n; i++) {
         array[i].isSorted = true;
+        array[i].isComparing = false; // Ensure no comparing states remain
         updateArray([...array]);
         await delay();
       }
     } else {
-      // Clear any previous sorted states
+      // Only clear sorted states if we're still sorting
       array.forEach(bar => {
         bar.isSorted = false;
+        bar.isComparing = false; // Ensure no comparing states remain
       });
+      updateArray([...array]);
     }
   }
 
-  // Ensure all elements are marked as sorted
+  // Final pass to ensure all elements are properly marked
   array.forEach(bar => {
     bar.isSorted = true;
     bar.isComparing = false;

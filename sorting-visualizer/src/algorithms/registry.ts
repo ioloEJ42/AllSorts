@@ -9,6 +9,7 @@ import { insertionSort } from './insertionSort';
 import { gnomeSort } from './gnomeSort';
 import { shakerSort } from './shakerSort';
 import { brickSort } from './brickSort';
+import { pancakeSort } from './pancakeSort';
 
 interface AlgorithmRegistryItem {
   component: SortingAlgorithm;
@@ -75,5 +76,11 @@ export const algorithmRegistry: AlgorithmRegistry = {
     path: 'brick-sort',
     title: 'Brick Sort',
     description: 'A parallel variation of bubble sort that alternates between sorting odd/even indexed pairs and even/odd indexed pairs of adjacent elements.'
+  },
+  pancakeSort: {
+    component: pancakeSort,
+    path: 'pancake-sort',
+    title: 'Pancake Sort',
+    description: 'A sorting algorithm that only uses flip operations, similar to flipping a stack of pancakes with a spatula.'
   }
 };

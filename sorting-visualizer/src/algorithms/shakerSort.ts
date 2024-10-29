@@ -3,83 +3,84 @@ import { ArrayBar, SortingAlgorithm } from '../types/sortingTypes';
 import { createSortingAlgorithm } from '../utils/sortingWrapper';
 
 const shakerSortLogic = async (
-  array: ArrayBar[],
-  updateArray: (newArray: ArrayBar[]) => void,
-  delay: () => Promise<void>
-) => {
-  const n = array.length;
-  let isSorted = true;
-  let start = 0;
-  let end = n - 1;
-
-  while (isSorted) {
-    isSorted = false;
-
-    // Forward pass (left to right)
-    for (let i = start; i < end; i++) {
-      // Highlight comparing elements
-      array[i].isComparing = true;
-      array[i + 1].isComparing = true;
+    array: ArrayBar[],
+    updateArray: (newArray: ArrayBar[]) => void,
+    delay: () => Promise<void>
+  ) => {
+    const n = array.length;
+    let isSorted = true;  // Start as true to enter the loop
+  
+    const updateAndDelay = async () => {
       updateArray([...array]);
       await delay();
-
-      if (array[i].height > array[i + 1].height) {
-        // Swap elements
-        [array[i], array[i + 1]] = [array[i + 1], array[i]];
-        isSorted = true;
-        updateArray([...array]);
-        await delay();
+    };
+  
+    while (isSorted) {
+      isSorted = false;  // Reset at the start of the forward pass
+      
+      // Forward pass
+      for (let i = 0; i < n - 1; i++) {
+        // Set comparing state
+        array[i].isComparing = true;
+        array[i + 1].isComparing = true;
+        await updateAndDelay();
+  
+        if (array[i].height > array[i + 1].height) {
+          // Swap elements
+          [array[i], array[i + 1]] = [array[i + 1], array[i]];
+          isSorted = true;  // Set to true if we make any swaps
+          await updateAndDelay();
+        }
+  
+        // Reset comparing state
+        array[i].isComparing = false;
+        array[i + 1].isComparing = false;
+        await updateAndDelay();
       }
-
-      // Reset comparison highlighting
-      array[i].isComparing = false;
-      array[i + 1].isComparing = false;
-    }
-
-    // Mark the last element as sorted
-    array[end].isSorted = true;
-    updateArray([...array]);
-
-    if (!isSorted) break;
-
-    isSorted = false;
-    end--;
-
-    // Backward pass (right to left)
-    for (let i = end - 1; i >= start; i--) {
-      // Highlight comparing elements
-      array[i].isComparing = true;
-      array[i + 1].isComparing = true;
-      updateArray([...array]);
-      await delay();
-
-      if (array[i].height > array[i + 1].height) {
-        // Swap elements
-        [array[i], array[i + 1]] = [array[i + 1], array[i]];
-        isSorted = true;
-        updateArray([...array]);
-        await delay();
+  
+      // If no swaps were made, array is sorted
+      if (!isSorted) {
+        break;
       }
-
-      // Reset comparison highlighting
-      array[i].isComparing = false;
-      array[i + 1].isComparing = false;
+  
+      isSorted = false;  // Reset for backward pass
+  
+      // Backward pass
+      for (let i = n - 1; i > 0; i--) {
+        // Set comparing state
+        array[i - 1].isComparing = true;
+        array[i].isComparing = true;
+        await updateAndDelay();
+  
+        if (array[i - 1].height > array[i].height) {
+          // Swap elements
+          [array[i - 1], array[i]] = [array[i], array[i - 1]];
+          isSorted = true;  // Set to true if we make any swaps
+          await updateAndDelay();
+        }
+  
+        // Reset comparing state
+        array[i - 1].isComparing = false;
+        array[i].isComparing = false;
+        await updateAndDelay();
+      }
+  
+      // Mark elements as sorted progressively
+      if (!isSorted) {
+        // If no swaps were made in either pass, mark all as sorted
+        array.forEach((bar) => {
+          bar.isSorted = true;
+        });
+      }
     }
-
-    // Mark the first element as sorted
-    array[start].isSorted = true;
+  
+    // Final cleanup - mark all as sorted
+    array.forEach(bar => {
+      bar.isSorted = true;
+      bar.isComparing = false;
+    });
     updateArray([...array]);
-    
-    start++;
-  }
-
-  // Mark any remaining elements as sorted
-  for (let i = 0; i < n; i++) {
-    array[i].isSorted = true;
-    array[i].isComparing = false;
-  }
-  updateArray([...array]);
-};
+  };
 
 export const shakerSort: SortingAlgorithm = {
   name: "Cocktail Shaker Sort",
