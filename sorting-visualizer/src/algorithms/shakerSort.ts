@@ -98,5 +98,6 @@ export const shakerSort: SortingAlgorithm = {
     "Each pass reduces the range of elements to check",
     "Mark elements as sorted at both ends after each complete pass",
     "Continue until no more swaps are needed"
-  ]
+  ],
+  category: 'logarithmic'
 };

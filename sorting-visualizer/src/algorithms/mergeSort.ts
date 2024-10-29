@@ -144,5 +144,6 @@ export const mergeSort: SortingAlgorithm = {
     "Merge the sorted halves by comparing elements",
     "Place smaller element in the merged array",
     "Continue until all elements are merged and sorted"
-  ]
+  ],
+  category: 'logarithmic'
 };

@@ -71,5 +71,6 @@ export const bubbleSort: SortingAlgorithm = {
     "Move to next pair of elements",
     "Repeat until no swaps are needed in a pass",
     "Each pass bubbles up the largest unsorted element"
-  ]
+  ],
+  category: 'quadratic'
 };

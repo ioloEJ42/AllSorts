@@ -4,22 +4,21 @@ import { Link } from "react-router-dom";
 import { algorithmRegistry } from "../algorithms/registry";
 
 const VisualizerPage = () => {
+  const categorizedAlgorithms = {
+    logarithmic: Object.values(algorithmRegistry)
+      .filter(algo => algo.component.category === 'logarithmic'),
+    quadratic: Object.values(algorithmRegistry)
+      .filter(algo => algo.component.category === 'quadratic'),
+    odd: Object.values(algorithmRegistry)
+      .filter(algo => algo.component.category === 'odd')
+  };
   useEffect(() => {
     document.title = "Explore Algorithms | All Sorts";
     return () => {
       document.title = "All Sorts";
     };
   }, []);
-
-  // Separate algorithms into logarithmic and quadratic
-  const logarithmicAlgorithms = Object.values(algorithmRegistry).filter(
-    (algo) => algo.component.timeComplexity.average.includes("log")
-  );
-
-  const quadraticAlgorithms = Object.values(algorithmRegistry).filter(
-    (algo) => !algo.component.timeComplexity.average.includes("log")
-  );
-
+  
   // Component for rendering algorithm cards
   const AlgorithmCard = ({ algo }: { algo: typeof algorithmRegistry[keyof typeof algorithmRegistry] }) => (
     <Link
@@ -54,20 +53,32 @@ const VisualizerPage = () => {
           <h2 className="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">
             Logarithmic Time Complexity
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-            {logarithmicAlgorithms.map((algo) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categorizedAlgorithms.logarithmic.map((algo) => (
               <AlgorithmCard key={algo.path} algo={algo} />
             ))}
           </div>
         </section>
 
         {/* Quadratic Section */}
-        <section>
+        <section className="mb-16">
           <h2 className="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">
             Quadratic Time Complexity
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {quadraticAlgorithms.map((algo) => (
+            {categorizedAlgorithms.quadratic.map((algo) => (
+              <AlgorithmCard key={algo.path} algo={algo} />
+            ))}
+          </div>
+        </section>
+
+                {/* Odd Section */}
+                <section>
+          <h2 className="text-2xl font-bold text-white mb-6 border-b border-gray-800 pb-2">
+            Odd & Unique Sorts
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {categorizedAlgorithms.odd.map((algo) => (
               <AlgorithmCard key={algo.path} algo={algo} />
             ))}
           </div>

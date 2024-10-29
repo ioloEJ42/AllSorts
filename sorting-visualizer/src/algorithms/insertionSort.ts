@@ -81,5 +81,6 @@ export const insertionSort: SortingAlgorithm = {
     "Compare key with elements in sorted portion from right to left",
     "Move greater elements one position ahead",
     "Insert key in its correct position in sorted portion"
-  ]
+  ],
+  category: 'quadratic'
 };

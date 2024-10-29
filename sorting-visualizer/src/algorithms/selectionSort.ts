@@ -64,5 +64,6 @@ export const selectionSort: SortingAlgorithm = {
     "Move boundary of sorted portion one element right",
     "Repeat until array is sorted",
     "Unlike Bubble Sort, it makes fewer swaps but same number of comparisons"
-  ]
+  ],
+  category: 'quadratic'
 };

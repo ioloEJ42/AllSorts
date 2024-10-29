@@ -1,10 +1,11 @@
-// src/types/sortingTypes.ts
 export interface ArrayBar {
   height: number;
   value: number;
   isComparing: boolean;
   isSorted: boolean;
 }
+
+export type ComplexityCategory = 'logarithmic' | 'quadratic' | 'odd';
 
 export interface SortingAlgorithm {
   name: string;
@@ -23,4 +24,5 @@ export interface SortingAlgorithm {
   };
   spaceComplexity: string;
   stepDescription: string[];
+  category: ComplexityCategory;  // Add this line
 }

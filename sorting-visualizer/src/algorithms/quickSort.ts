@@ -132,5 +132,6 @@ export const quickSort: SortingAlgorithm = {
     "Recursively apply the above steps to the sub-arrays",
     "The pivot element is always in its final sorted position",
     "Continue until all elements are sorted"
-  ]
+  ],
+  category: 'logarithmic'
 };

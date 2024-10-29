@@ -84,5 +84,6 @@ export const gnomeSort: SortingAlgorithm = {
     "Move back through the array, continuing to swap until elements are in correct order",
     "Move forward to next element and repeat",
     "Process continues until array is sorted"
-  ]
+  ],
+  category: 'quadratic'
 };

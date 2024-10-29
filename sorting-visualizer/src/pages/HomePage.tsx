@@ -3,13 +3,15 @@ import AnimatedTitle from "../components/AnimatedTitle";
 import { algorithmRegistry } from "../algorithms/registry";
 
 const HomePage = () => {
-  // Get and organize algorithms by complexity
-  const algorithms = {
+  const categorizedAlgorithms = {
     logarithmic: Object.values(algorithmRegistry)
-      .filter(algo => algo.component.timeComplexity.average.includes('log'))
+      .filter(algo => algo.component.category === 'logarithmic')
       .map(algo => algo.title),
     quadratic: Object.values(algorithmRegistry)
-      .filter(algo => !algo.component.timeComplexity.average.includes('log'))
+      .filter(algo => algo.component.category === 'quadratic')
+      .map(algo => algo.title),
+    odd: Object.values(algorithmRegistry)
+      .filter(algo => algo.component.category === 'odd')
       .map(algo => algo.title)
   };
 
@@ -59,41 +61,40 @@ const HomePage = () => {
             </p>
           </div>
 
-          {/* Algorithm Lists */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
-            {/* Logarithmic Section */}
-            <div>
-              <h3 className="font-mono text-sm text-gray-500 mb-6 uppercase tracking-wider">
-                Logarithmic Complexity
-              </h3>
-              <ul className="space-y-4">
-                {algorithms.logarithmic.map((algo) => (
-                  <li 
-                    key={algo}
-                    className="text-2xl font-light text-white hover:text-gray-300 transition-colors"
-                  >
-                    {algo}
-                  </li>
-                ))}
-              </ul>
-            </div>
+  {/* Logarithmic Section */}
+  <div>
+    <h3 className="font-mono text-sm text-gray-500 mb-6 uppercase tracking-wider">
+      Logarithmic Complexity
+    </h3>
+    <ul className="space-y-4">
+      {categorizedAlgorithms.logarithmic.map((algo) => (
+        <li
+          key={algo}
+          className="text-2xl font-light text-white hover:text-gray-300 transition-colors"
+        >
+          {algo}
+        </li>
+      ))}
+    </ul>
+  </div>
 
-            {/* Quadratic Section */}
-            <div>
-              <h3 className="font-mono text-sm text-gray-500 mb-6 uppercase tracking-wider">
-                Quadratic Complexity
-              </h3>
-              <ul className="space-y-4">
-                {algorithms.quadratic.map((algo) => (
-                  <li 
-                    key={algo}
-                    className="text-2xl font-light text-white hover:text-gray-300 transition-colors"
-                  >
-                    {algo}
-                  </li>
-                ))}
-              </ul>
-            </div>
+  {/* Quadratic Section */}
+  <div>
+    <h3 className="font-mono text-sm text-gray-500 mb-6 uppercase tracking-wider">
+      Quadratic Complexity
+    </h3>
+    <ul className="space-y-4">
+      {categorizedAlgorithms.quadratic.map((algo) => (
+        <li
+          key={algo}
+          className="text-2xl font-light text-white hover:text-gray-300 transition-colors"
+        >
+          {algo}
+        </li>
+      ))}
+    </ul>
+  </div>
           </div>
         </div>
       </section>

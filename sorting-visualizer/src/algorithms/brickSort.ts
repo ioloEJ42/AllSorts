@@ -109,5 +109,6 @@ export const brickSort: SortingAlgorithm = {
     "Repeat both phases until no swaps are needed",
     "Each phase sorts pairs independently",
     "Algorithm is naturally parallel in nature"
-  ]
+  ],
+  category: 'quadratic'
 };

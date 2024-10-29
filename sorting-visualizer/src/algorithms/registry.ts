@@ -10,8 +10,9 @@ import { gnomeSort } from './gnomeSort';
 import { shakerSort } from './shakerSort';
 import { brickSort } from './brickSort';
 import { pancakeSort } from './pancakeSort';
+import { bogoSort } from './bogoSort';
 
-interface AlgorithmRegistryItem {
+export interface AlgorithmRegistryItem {
   component: SortingAlgorithm;
   path: string;
   title: string;
@@ -82,5 +83,11 @@ export const algorithmRegistry: AlgorithmRegistry = {
     path: 'pancake-sort',
     title: 'Pancake Sort',
     description: 'A sorting algorithm that only uses flip operations, similar to flipping a stack of pancakes with a spatula.'
-  }
+  },
+  bogoSort: {
+    component: bogoSort,
+    path: 'bogo-sort',
+    title: 'Bogo Sort',
+    description: 'A deliberately inefficient sorting algorithm that randomly shuffles elements until they happen to be sorted. Also known as "Stupid Sort".'
+  },
 };

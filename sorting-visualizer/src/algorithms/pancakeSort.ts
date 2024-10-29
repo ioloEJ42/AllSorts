@@ -112,5 +112,6 @@ export const pancakeSort: SortingAlgorithm = {
     "Flip the subarray from start to its correct position (placing it at end)",
     "Mark as sorted and reduce the unsorted portion",
     "Repeat until all elements are in place"
-  ]
+  ],
+  category: 'quadratic'
 };

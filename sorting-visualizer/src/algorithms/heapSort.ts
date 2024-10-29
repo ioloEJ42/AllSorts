@@ -109,5 +109,6 @@ export const heapSort: SortingAlgorithm = {
     "Reduce heap size by 1 and heapify the root",
     "Repeat steps 2-3 until size becomes 1",
     "The array is now sorted in ascending order"
-  ]
+  ],
+  category: 'logarithmic'
 };
