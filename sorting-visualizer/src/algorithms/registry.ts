@@ -6,6 +6,9 @@ import { SortingAlgorithm } from '../types/sortingTypes';
 import { mergeSort } from './mergeSort';
 import { heapSort } from './heapSort';
 import { insertionSort } from './insertionSort';
+import { gnomeSort } from './gnomeSort';
+import { shakerSort } from './shakerSort';
+import { brickSort } from './brickSort';
 
 interface AlgorithmRegistryItem {
   component: SortingAlgorithm;
@@ -54,5 +57,23 @@ export const algorithmRegistry: AlgorithmRegistry = {
     path: 'insertion-sort',
     title: 'Insertion Sort',
     description: 'A simple sorting algorithm that builds the final sorted array one item at a time, by repeatedly inserting a new element into the sorted portion of the array.'
+  },
+  gnomeSort: {
+    component: gnomeSort,
+    path: 'gnome-sort',
+    title: 'Gnome Sort',
+    description: 'A simple sorting algorithm that works by repeatedly swapping adjacent elements that are in the wrong order, similar to how a garden gnome sorts flower pots.'
+  },
+  shakerSort: {
+    component: shakerSort,
+    path: 'shaker-sort',
+    title: 'Cocktail Shaker Sort',
+    description: 'A variation of Bubble Sort that sorts bidirectionally on each pass through the array, potentially reducing the total number of iterations needed.'
+  },
+  brickSort: {
+    component: brickSort,
+    path: 'brick-sort',
+    title: 'Brick Sort',
+    description: 'A parallel variation of bubble sort that alternates between sorting odd/even indexed pairs and even/odd indexed pairs of adjacent elements.'
   }
 };

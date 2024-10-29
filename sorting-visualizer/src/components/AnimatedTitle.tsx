@@ -1,4 +1,3 @@
-// src/components/AnimatedTitle.tsx
 import { useState, useEffect } from "react";
 
 interface CharacterState {
@@ -17,28 +16,41 @@ const AnimatedTitle = () => {
 
   // Initialize scrambled text
   useEffect(() => {
+    // Create a more deterministic mapping for same-character positions
     const chars = targetText.split("").map((char, index) => ({
       char,
       isCorrect: false,
       isComparing: false,
-      originalIndex: index,
+      originalIndex: index, // Keep original index as is
     }));
 
-    // Shuffle the characters
+    // Fisher-Yates shuffle to ensure proper randomization
     for (let i = chars.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [chars[i], chars[j]] = [chars[j], chars[i]];
+      // Don't modify originalIndex during shuffle
+    }
+
+    // Verify shuffle produced a different arrangement
+    const isShuffled = chars.some((char, index) => char.char !== targetText[index]);
+    if (!isShuffled) {
+      // If not shuffled enough, shuffle one more time
+      for (let i = chars.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [chars[i], chars[j]] = [chars[j], chars[i]];
+      }
     }
 
     setCharacters(chars);
     setTimeout(() => setIsSorting(true), 500);
   }, []);
 
-  // Check if text is sorted
-  const checkIfSorted = (array: CharacterState[]) => {
-    const currentText = array.map((char) => char.char).join("");
-    return currentText === targetText;
+  // Simplified check for sorting
+  const checkIfSorted = (array: CharacterState[]): boolean => {
+    return array.every((char, index) => char.originalIndex === index);
   };
+
+  // Rest of your code remains the same...
 
   useEffect(() => {
     if (!isSorting) return;
@@ -50,7 +62,6 @@ const AnimatedTitle = () => {
     ) => {
       if (start < end) {
         const mid = Math.floor(start + (end - start) / 2);
-
         await mergeSort(array, start, mid);
         await mergeSort(array, mid + 1, end);
         await merge(array, start, mid, end);
@@ -112,7 +123,6 @@ const AnimatedTitle = () => {
         setCharacters([...array]);
       }
 
-      // Check if the entire array is sorted after each merge
       if (checkIfSorted(array)) {
         await new Promise((resolve) => setTimeout(resolve, 300));
         setIsComplete(true);
@@ -133,36 +143,69 @@ const AnimatedTitle = () => {
 
   return (
     <div className="relative h-[200px]">
+      {/* Optional scanning line effect */}
+      {isSorting && (
+        <div 
+          className="absolute left-0 right-0 h-px bg-white/20 blur-sm"
+          style={{
+            top: '50%',
+            animation: 'scan 2s ease-in-out infinite'
+          }}
+        />
+      )}
+      
       <div
         className={`
           flex justify-center space-x-1
           transition-all duration-700 ease-in-out
-          ${
-            isAnimating
-              ? "transform -translate-y-6 scale-110 tracking-wider"
-              : "transform translate-y-0 scale-100 tracking-normal"
-          }
+          ${isAnimating ? "transform scale-90" : "transform scale-150"}
         `}
       >
         {characters.map((char, index) => (
-          <span
-            key={index}
-            className={`
-              text-6xl md:text-7xl font-bold
-              transition-all duration-200
-              ${
-                isComplete
-                  ? "text-white"
-                  : char.isComparing
-                  ? "text-yellow-500 transform scale-110"
-                  : char.isCorrect
-                  ? "text-green-500"
-                  : "text-white"
-              }
-            `}
-          >
-            {char.char}
-          </span>
+          <div key={index} className="relative">
+            {/* Character */}
+            <span
+              className={`
+                text-6xl md:text-7xl font-bold
+                inline-block
+                transition-all duration-200
+                ${
+                  isComplete
+                    ? "text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]"
+                    : char.isComparing
+                    ? "text-white scale-110 drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]"
+                    : char.isCorrect
+                    ? "text-white drop-shadow-[0_0_8px_rgba(255,255,255,0.3)]"
+                    : "text-white/80"
+                }
+                ${!isComplete && char.isComparing ? "animate-bounce-subtle" : ""}
+              `}
+            >
+              {char.char}
+            </span>
+  
+            {/* Underline indicator */}
+            <div
+              className={`
+                absolute bottom-0 left-0 w-full h-[2px]
+                transition-all duration-200
+                ${
+                  char.isComparing
+                    ? "bg-white w-full"
+                    : char.isCorrect
+                    ? "bg-white/50 w-full"
+                    : "bg-white/30 w-0"
+                }
+              `}
+            />
+  
+            {/* Optional particle effects when comparing - only show if not complete */}
+            {!isComplete && char.isComparing && (
+              <div className="absolute -bottom-2 left-1/2 -translate-x-1/2">
+                <div className="w-full bg-white/50 animate-glow" />
+              </div>
+            )}
+          </div>
         ))}
       </div>
     </div>

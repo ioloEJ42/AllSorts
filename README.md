@@ -1,4 +1,4 @@
-# All Sorts - Algorithm Visualization Platform
+# All-Sorts - Algorithm Visualization Platform
 
 A modern, interactive sorting algorithm visualization tool built with React, TypeScript, and Tailwind CSS. This project aims to make understanding sorting algorithms intuitive through real-time visual feedback and interactive controls.
 
