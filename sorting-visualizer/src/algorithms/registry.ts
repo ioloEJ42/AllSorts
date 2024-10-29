@@ -11,6 +11,8 @@ import { shakerSort } from './shakerSort';
 import { brickSort } from './brickSort';
 import { pancakeSort } from './pancakeSort';
 import { bogoSort } from './bogoSort';
+import { stoogeSort } from './stoogeSort';
+import { shellSort } from './shellSort';
 
 export interface AlgorithmRegistryItem {
   component: SortingAlgorithm;
@@ -90,4 +92,16 @@ export const algorithmRegistry: AlgorithmRegistry = {
     title: 'Bogo Sort',
     description: 'A deliberately inefficient sorting algorithm that randomly shuffles elements until they happen to be sorted. Also known as "Stupid Sort".'
   },
+  stoogeSort: {
+    component: stoogeSort,
+    path: 'stooge-sort',
+    title: 'Stooge Sort',
+    description: 'A recursive sorting algorithm with a peculiar approach of sorting the first 2/3, last 2/3, and first 2/3 again. Known for its unusual and inefficient time complexity.'
+  },
+  shellSort: {
+    component: shellSort,
+    path: 'shell-sort',
+    title: 'Shell Sort',
+    description: 'An optimization of Insertion Sort that works by comparing elements with a gap between them, progressively reducing the gap size until the array is sorted.'
+  }
 };
