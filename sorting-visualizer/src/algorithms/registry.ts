@@ -17,6 +17,7 @@ import { pancakeSort } from './pancakeSort';
 
 // Weird Sorts
 import { bitonicSort } from './bitonicSort';
+import {radixSort} from './radixSort';
 import { shellSort } from './shellSort';
 import { combSort } from './combSort';
 import { bogoSort } from './bogoSort';
@@ -123,5 +124,11 @@ export const algorithmRegistry: AlgorithmRegistry = {
     path: 'bitonic-sort',
     title: 'Bitonic Sort',
     description: 'A parallel comparison sorting algorithm that first builds a bitonic sequence and then merges it into a sorted sequence. Requires input size to be a power of 2.'
+  },
+  radixSort: {
+    component: radixSort,
+    path: 'radix-sort',
+    title: 'Radix Sort',
+    description: 'A non-comparative integer sorting algorithm that sorts data by processing individual digits, making it unique among sorting algorithms. It can achieve linear time complexity in specific cases.'
   }
 };
