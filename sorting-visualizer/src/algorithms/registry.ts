@@ -1,18 +1,26 @@
 // src/algorithms/registry.ts
-import { bubbleSort } from './bubblesort';
-import { selectionSort } from './selectionSort';
-import { quickSort } from './quickSort';
+
 import { SortingAlgorithm } from '../types/sortingTypes';
+// Logarithmic Sorts
+import { quickSort } from './quickSort';
 import { mergeSort } from './mergeSort';
 import { heapSort } from './heapSort';
+
+// Quadratic Sorts
+import { bubbleSort } from './bubblesort';
+import { selectionSort } from './selectionSort';
 import { insertionSort } from './insertionSort';
 import { gnomeSort } from './gnomeSort';
 import { shakerSort } from './shakerSort';
 import { brickSort } from './brickSort';
 import { pancakeSort } from './pancakeSort';
+
+// Weird Sorts
+import { bitonicSort } from './bitonicSort';
+import { shellSort } from './shellSort';
+import { combSort } from './combSort';
 import { bogoSort } from './bogoSort';
 import { stoogeSort } from './stoogeSort';
-import { shellSort } from './shellSort';
 
 export interface AlgorithmRegistryItem {
   component: SortingAlgorithm;
@@ -103,5 +111,17 @@ export const algorithmRegistry: AlgorithmRegistry = {
     path: 'shell-sort',
     title: 'Shell Sort',
     description: 'An optimization of Insertion Sort that works by comparing elements with a gap between them, progressively reducing the gap size until the array is sorted.'
+  },
+  combSort: {
+    component: combSort,
+    path: 'comb-sort',
+    title: 'Comb Sort',
+    description: 'An improvement over Bubble Sort that compares elements with a shrinking gap, effectively dealing with small values near the end that typically slow down Bubble Sort.'
+  },
+  bitonicSort: {
+    component: bitonicSort,
+    path: 'bitonic-sort',
+    title: 'Bitonic Sort',
+    description: 'A parallel comparison sorting algorithm that first builds a bitonic sequence and then merges it into a sorted sequence. Requires input size to be a power of 2.'
   }
 };

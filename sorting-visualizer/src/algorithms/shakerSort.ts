@@ -99,5 +99,5 @@ export const shakerSort: SortingAlgorithm = {
     "Mark elements as sorted at both ends after each complete pass",
     "Continue until no more swaps are needed"
   ],
-  category: 'logarithmic'
+  category: 'quadratic'
 };

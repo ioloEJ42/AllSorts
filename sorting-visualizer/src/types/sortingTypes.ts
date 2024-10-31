@@ -7,6 +7,7 @@ export interface ArrayBar {
 
 export type ComplexityCategory = 'logarithmic' | 'quadratic' | 'odd';
 
+// src/types/sortingTypes.ts
 export interface SortingAlgorithm {
   name: string;
   execute: (
@@ -24,5 +25,6 @@ export interface SortingAlgorithm {
   };
   spaceComplexity: string;
   stepDescription: string[];
-  category: ComplexityCategory;  // Add this line
+  category: ComplexityCategory;
+  requiresPowerOf2?: boolean;  // Add this line
 }

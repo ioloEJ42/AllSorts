@@ -1,6 +1,8 @@
 import { useState, useCallback, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrayBar, SortingAlgorithm } from "../types/sortingTypes";
+import { Toaster, toast } from "react-hot-toast";
+import { isPowerOf2 } from "../algorithms/bitonicSort";
 
 interface AlgorithmTemplateProps {
   algorithm: SortingAlgorithm;
@@ -37,6 +39,13 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
   const handleSizeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSize = e.target.value;
     if (/^\d*$/.test(newSize) && parseInt(newSize) <= 200) {
+      if (algorithm.requiresPowerOf2) {
+        const size = parseInt(newSize) || 0;
+        if (size > 0 && !isPowerOf2(size)) {
+          toast.error("Please enter a power of 2 (2, 4, 8, 16, 32, 64, 128)");
+          return;
+        }
+      }
       setArraySize(newSize);
       setShouldRegenerate(true);
     }
@@ -65,6 +74,11 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
   const handleSort = async () => {
     if (isRunning) {
       stopSorting();
+      return;
+    }
+
+    if (algorithm.requiresPowerOf2 && !isPowerOf2(array.length)) {
+      toast.error("Array size must be a power of 2 for this algorithm");
       return;
     }
 
@@ -128,6 +142,7 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
 
   return (
     <div className="bg-black text-white">
+      <Toaster position="top-right" />
       {/* Visualization Section */}
       <section className="relative min-h-screen">
         {/* Dotted background pattern */}
