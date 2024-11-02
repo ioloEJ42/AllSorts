@@ -1,80 +1,109 @@
-# All-Sorts - Algorithm Visualization Platform
+# All-Sorts - Advanced Algorithm Visualization Platform
 
-A modern, interactive sorting algorithm visualization tool built with React, TypeScript, and Tailwind CSS. This project aims to make understanding sorting algorithms intuitive through real-time visual feedback and interactive controls.
+A modern, interactive sorting algorithm visualization platform showcasing 15+ algorithms through real-time visualization. Built with React, TypeScript, and Tailwind CSS.
 
-## Current Implementation
+## Features
 
-- **Algorithms Implemented:**
+### Algorithm Categories
 
-  - Bubble Sort (O(n²))
-  - Selection Sort (O(n²))
+#### Logarithmic (O(n log n)):
 
-- **Technical Stack:**
-  - React 18 with TypeScript
-  - Vite for build tooling
-  - Tailwind CSS for styling
-  - React Router for navigation
+- Quick Sort
+- Merge Sort
+- Heap Sort
 
-## Core Features
+#### Quadratic (O(n²)):
 
-### Visualization Engine
+- Bubble Sort
+- Selection Sort
+- Insertion Sort
+- Shell Sort
+- Comb Sort
+- Brick Sort
+- Cocktail Sort
+- Pancake Sort
+- Gnome Sort
 
-- Real-time visual representation of array operations
-- Color-coded state management (white: unsorted, yellow: comparing, green: sorted)
-- Dynamic array size control (5-200 elements)
-- Configurable sorting speed
-- Abort functionality for stopping mid-sort
+#### Unique & Experimental:
+
+- Bitonic Sort (requires power-of-2 arrays)
+- Bogo Sort
+- Radix Sort
+- Stooge Sort
+
+### Technical Features
+
+- Real-time visualization engine
+- Interactive array controls (size: 5-200 elements)
+- Variable sorting speeds
+- Abort control system
+- Toast notifications
+- Smooth page transitions
+
+### Visualization States
+
+- **White**: Unsorted elements
+- **Yellow**: Active comparisons
+- **Green**: Sorted elements
+
+### Technical Stack
+
+- React 18 with TypeScript
+- Tailwind CSS for styling
+- Framer Motion for animations
+- React Router for navigation
+- React Hot Toast for notifications
+- Vite for build tooling
 
 ### Architecture
 
-- Modular algorithm implementation using Higher-Order Functions
-- Centralized sorting wrapper for consistent error handling and abort control
-- Type-safe implementation with TypeScript
-- Component-based architecture for easy expansion
+```
+src/
+├── algorithms/        # Sorting implementations
+├── components/        # React components
+├── types/             # TypeScript definitions
+├── utils/             # HOFs and wrappers
+└── pages/             # Route pages
+```
 
-### User Interface
-
-- Full-screen algorithm visualization
-- Interactive controls for array manipulation
-- Real-time performance metrics
-- Responsive design for all screen sizes
-- Educational content for each algorithm
-
-## Planned Expansions
-
-- Additional algorithms (Quick Sort, Merge Sort, Heap Sort)
-- Algorithm comparison view
-- Step-by-step execution mode
-- Performance analytics
-- Custom array input
-
-## Getting Started
+### Getting Started
 
 ```bash
 # Install dependencies
 npm install
 
-# Run development server
+# Development server
 npm run dev
 
-# Build for production
+# Production build
 npm run build
 ```
 
-## Project Structure
+### Type-Safe Implementation
 
-```
-src/
-├── algorithms/        # Sorting algorithm implementations
-├── components/        # React components
-├── types/            # TypeScript definitions
-├── utils/            # Utility functions and wrappers
-└── pages/            # Route pages
+```typescript
+export interface SortingAlgorithm {
+  name: string;
+  execute: (array: ArrayBar[], ...) => Promise<void>;
+  description: string;
+  timeComplexity: {
+    best: string;
+    average: string;
+    worst: string;
+  };
+  spaceComplexity: string;
+  category: 'logarithmic' | 'quadratic' | 'odd';
+  requiresPowerOf2?: boolean;
+}
 ```
 
 ## Contributing
 
-This project is in active development. Contributions are welcome! See the issues page for planned features and known bugs.
+Active development. Contributions welcome. See issues for planned features.
+
+## Live Demo
+
+[https://all-sorts.netlify.app/](https://all-sorts.netlify.app/)
 
 ## License
 
