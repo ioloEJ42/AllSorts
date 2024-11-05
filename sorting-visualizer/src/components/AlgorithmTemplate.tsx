@@ -205,10 +205,9 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
               onClick={handleSort}
               disabled={isSorting && !isRunning}
               className={`px-4 py-2 border transition-colors disabled:opacity-50 disabled:cursor-not-allowed
-                ${
-                  isRunning
-                    ? "bg-red-500 border-red-500 text-white hover:bg-red-600 hover:border-red-600"
-                    : "border-white text-white hover:bg-white hover:text-black"
+                ${isRunning
+                  ? "bg-red-500 border-red-500 text-white hover:bg-red-600 hover:border-red-600"
+                  : "border-white text-white hover:bg-white hover:text-black"
                 }`}
               aria-label={isRunning ? "Stop sorting" : "Start sorting"}
             >
@@ -272,13 +271,12 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
             {array.map((bar: ArrayBar, index: number) => (
               <div
                 key={index}
-                className={`w-1 transition-all duration-200 ${
-                  bar.isComparing
+                className={`w-1 transition-all duration-200 ${bar.isComparing
                     ? "bg-yellow-500"
                     : bar.isSorted
-                    ? "bg-green-500"
-                    : "bg-white"
-                }`}
+                      ? "bg-green-500"
+                      : "bg-white"
+                  }`}
                 style={{ height: `${bar.height}px` }}
                 aria-hidden="true"
               />
