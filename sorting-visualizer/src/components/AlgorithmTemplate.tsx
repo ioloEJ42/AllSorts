@@ -9,6 +9,10 @@ interface AlgorithmTemplateProps {
 }
 
 const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
+  // Acessibility
+  const randomizeButtonRef = useRef<HTMLButtonElement>(null);
+  const sortButtonRef = useRef<HTMLButtonElement>(null);
+
   const [arraySize, setArraySize] = useState("50");
   const [array, setArray] = useState<ArrayBar[]>([]);
   const [isSorting, setIsSorting] = useState(false);
@@ -141,13 +145,21 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
   }, [algorithm]);
 
   return (
-    <div className="bg-black text-white">
+    <div
+      className="bg-black text-white"
+      role="main"
+      aria-label={`${algorithm.name} Visualization`}
+    >
       <Toaster position="top-right" />
+
       {/* Visualization Section */}
-      <section className="relative min-h-screen">
-        {/* Dotted background pattern */}
+      <section
+        className="relative min-h-screen"
+        aria-label="Algorithm Visualization"
+      >
         <div
           className="absolute inset-0"
+          aria-hidden="true"
           style={{
             backgroundImage: `radial-gradient(circle, #808080 1px, transparent 1px)`,
             backgroundSize: "30px 30px",
@@ -155,88 +167,108 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
           }}
         />
 
-        {/* Navigation */}
-        <nav className="relative border-b border-gray-800 px-4">
+        <nav
+          className="relative border-b border-gray-800 px-4"
+          aria-label="Main navigation"
+        >
           <div className="max-w-7xl mx-auto flex justify-between h-16 items-center">
-            <Link to="/explore" className="text-xl font-semibold">
+            <Link
+              to="/explore"
+              className="text-xl font-semibold"
+              aria-label="Back to algorithm selection"
+            >
               All Sorts
             </Link>
             <h1 className="text-xl font-bold">{algorithm.name}</h1>
           </div>
         </nav>
 
-        {/* Main content */}
         <div className="relative flex flex-col h-[calc(100vh-4rem)] p-4">
           {/* Controls */}
-          <div className="flex flex-wrap items-center gap-6 mb-6">
+          <div
+            className="flex flex-wrap items-center gap-6 mb-6"
+            role="toolbar"
+            aria-label="Sorting controls"
+          >
             <button
+              ref={randomizeButtonRef}
               onClick={handleRandomize}
               disabled={isRunning}
               className="px-4 py-2 bg-white text-black hover:bg-gray-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              aria-label="Randomize array"
             >
               Randomize Array
             </button>
 
             <button
+              ref={sortButtonRef}
               onClick={handleSort}
-              disabled={isSorting && !isRunning} // Only disabled during transitions
+              disabled={isSorting && !isRunning}
               className={`px-4 py-2 border transition-colors disabled:opacity-50 disabled:cursor-not-allowed
-          ${
-            isRunning
-              ? "bg-red-500 border-red-500 text-white hover:bg-red-600 hover:border-red-600"
-              : "border-white text-white hover:bg-white hover:text-black"
-          }`}
+                ${
+                  isRunning
+                    ? "bg-red-500 border-red-500 text-white hover:bg-red-600 hover:border-red-600"
+                    : "border-white text-white hover:bg-white hover:text-black"
+                }`}
+              aria-label={isRunning ? "Stop sorting" : "Start sorting"}
             >
               {isRunning ? "Stop Sorting" : "Start Sorting"}
             </button>
 
             <div className="flex items-center gap-4">
-              <label className="text-sm">Speed:</label>
+              <label htmlFor="speed-select" className="text-sm">
+                Speed:
+              </label>
               <select
+                id="speed-select"
                 value={delay}
                 onChange={handleSpeedChange}
                 disabled={isRunning}
                 className="bg-black border border-gray-800 text-white px-2 py-1 rounded focus:outline-none focus:border-gray-600"
+                aria-label="Sorting speed"
               >
-                <option className="bg-black text-white" value="100">
-                  Slow
-                </option>
-                <option className="bg-black text-white" value="50">
-                  Normal
-                </option>
-                <option className="bg-black text-white" value="25">
-                  Fast
-                </option>
-                <option className="bg-black text-white" value="10">
-                  Very Fast
-                </option>
-                <option className="bg-black text-white" value="5">
-                  Ultra Fast
-                </option>
+                <option value="100">Slow</option>
+                <option value="50">Normal</option>
+                <option value="25">Fast</option>
+                <option value="10">Very Fast</option>
+                <option value="5">Ultra Fast</option>
               </select>
             </div>
 
             <div className="flex items-center gap-4">
-              <label className="text-sm">Array Size:</label>
+              <label htmlFor="array-size" className="text-sm">
+                Array Size:
+              </label>
               <input
+                id="array-size"
                 type="text"
                 value={arraySize}
                 onChange={handleSizeChange}
                 disabled={isSorting}
                 className="w-20 px-2 py-1 bg-transparent border border-gray-800 text-white disabled:opacity-50"
                 placeholder="50"
+                aria-label="Array size"
+                aria-description={
+                  algorithm.requiresPowerOf2
+                    ? "Must be a power of 2"
+                    : "Enter size between 5 and 200"
+                }
               />
             </div>
 
-            <div className="flex items-center gap-4">
-              <label className="text-sm">Time:</label>
+            <div className="flex items-center gap-4" aria-live="polite">
+              <span className="text-sm">Time:</span>
               <span className="font-mono text-gray-400">
                 {timeTaken.toFixed(2)}ms
               </span>
             </div>
           </div>
 
-          <div className="flex-1 border border-gray-800 rounded flex items-end justify-end gap-[2px] p-4 bg-zinc-900/75">
+          <div
+            className="flex-1 border border-gray-800 rounded flex items-end justify-end gap-[2px] p-4 bg-zinc-900/75"
+            role="region"
+            aria-label="Array visualization"
+          >
             {array.map((bar: ArrayBar, index: number) => (
               <div
                 key={index}
@@ -248,13 +280,18 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
                     : "bg-white"
                 }`}
                 style={{ height: `${bar.height}px` }}
+                aria-hidden="true"
               />
             ))}
           </div>
         </div>
       </section>
 
-      <section className="min-h-screen bg-gradient-to-b from-zinc-900 to-black px-4 py-16">
+      {/* Information Section */}
+      <section
+        className="min-h-screen bg-gradient-to-b from-zinc-900 to-black px-4 py-16"
+        aria-label="Algorithm information"
+      >
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16">
             {/* Algorithm Description */}
