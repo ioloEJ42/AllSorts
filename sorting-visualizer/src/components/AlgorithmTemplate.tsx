@@ -236,7 +236,6 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
             </div>
           </div>
 
-          {/* Array visualization container - now takes up remaining height */}
           <div className="flex-1 border border-gray-800 rounded flex items-end justify-end gap-[2px] p-4 bg-zinc-900/75">
             {array.map((bar: ArrayBar, index: number) => (
               <div
@@ -255,64 +254,95 @@ const AlgorithmTemplate: React.FC<AlgorithmTemplateProps> = ({ algorithm }) => {
         </div>
       </section>
 
-      {/* Information Section */}
-      <section className="min-h-screen bg-zinc-900 px-4 py-16">
+      <section className="min-h-screen bg-gradient-to-b from-zinc-900 to-black px-4 py-16">
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16">
             {/* Algorithm Description */}
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-3xl font-bold mb-6">How it Works</h2>
-                <p className="text-gray-400 leading-relaxed text-lg">
+            <div className="space-y-12">
+              <div className="group">
+                <div className="flex items-center space-x-4 mb-6">
+                  <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+                    How it Works
+                  </h2>
+                  <div className="flex-1 h-px bg-gradient-to-r from-gray-800 to-transparent" />
+                </div>
+                <p className="text-gray-400 leading-relaxed text-lg transition-colors duration-300 group-hover:text-gray-300">
                   {algorithm.description}
                 </p>
               </div>
 
-              <div>
-                <h3 className="text-2xl font-bold mb-4">Step by Step</h3>
-                <ol className="list-decimal list-inside space-y-3 text-gray-400">
+              <div className="group">
+                <div className="flex items-center space-x-4 mb-6">
+                  <h3 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+                    Step by Step
+                  </h3>
+                  <div className="flex-1 h-px bg-gradient-to-r from-gray-800 to-transparent" />
+                </div>
+                <ol className="relative border-l border-gray-800 space-y-6 ml-4">
                   {algorithm.stepDescription.map((step, index) => (
-                    <li key={index}>{step}</li>
+                    <li key={index} className="ml-6 group/item">
+                      <span className="absolute flex items-center justify-center w-6 h-6 bg-zinc-900 rounded-full -left-3 border border-gray-800 group-hover/item:border-gray-700 transition-colors">
+                        {index + 1}
+                      </span>
+                      <p className="text-gray-400 group-hover/item:text-gray-300 transition-colors">
+                        {step}
+                      </p>
+                    </li>
                   ))}
                 </ol>
               </div>
             </div>
 
             {/* Complexity Information */}
-            <div className="space-y-8">
-              <div>
-                <h2 className="text-3xl font-bold mb-6">Complexity Analysis</h2>
-                <div className="space-y-6 text-gray-400">
-                  <div>
-                    <h3 className="text-xl font-semibold text-white mb-4">
+            <div className="space-y-12">
+              <div className="group">
+                <div className="flex items-center space-x-4 mb-8">
+                  <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500">
+                    Complexity Analysis
+                  </h2>
+                  <div className="flex-1 h-px bg-gradient-to-r from-gray-800 to-transparent" />
+                </div>
+
+                <div className="space-y-8">
+                  <div className="bg-zinc-900/50 border border-gray-800 rounded-lg p-6 group-hover:border-gray-700 transition-all duration-300">
+                    <h3 className="text-xl font-semibold text-white mb-6">
                       Time Complexity
                     </h3>
-                    <ul className="space-y-3">
-                      <li className="flex justify-between items-center border-b border-gray-800 pb-2">
-                        <span>Best Case:</span>
-                        <span className="font-mono">
-                          {algorithm.timeComplexity.best}
-                        </span>
-                      </li>
-                      <li className="flex justify-between items-center border-b border-gray-800 pb-2">
-                        <span>Average Case:</span>
-                        <span className="font-mono">
-                          {algorithm.timeComplexity.average}
-                        </span>
-                      </li>
-                      <li className="flex justify-between items-center border-b border-gray-800 pb-2">
-                        <span>Worst Case:</span>
-                        <span className="font-mono">
-                          {algorithm.timeComplexity.worst}
-                        </span>
-                      </li>
+                    <ul className="space-y-4">
+                      {[
+                        {
+                          label: "Best Case",
+                          value: algorithm.timeComplexity.best,
+                        },
+                        {
+                          label: "Average Case",
+                          value: algorithm.timeComplexity.average,
+                        },
+                        {
+                          label: "Worst Case",
+                          value: algorithm.timeComplexity.worst,
+                        },
+                      ].map(({ label, value }) => (
+                        <li
+                          key={label}
+                          className="flex justify-between items-center pb-3 border-b border-gray-800/50 last:border-0 last:pb-0"
+                        >
+                          <span className="text-gray-400">{label}</span>
+                          <code className="font-mono text-white bg-black/25 px-3 py-1 rounded">
+                            {value}
+                          </code>
+                        </li>
+                      ))}
                     </ul>
                   </div>
-                  <div>
+
+                  <div className="bg-zinc-900/50 border border-gray-800 rounded-lg p-6 group-hover:border-gray-700 transition-all duration-300">
                     <h3 className="text-xl font-semibold text-white mb-4">
                       Space Complexity
                     </h3>
-                    <p className="font-mono">{algorithm.spaceComplexity}</p>
+                    <code className="font-mono text-white bg-black/25 px-3 py-1 rounded">
+                      {algorithm.spaceComplexity}
+                    </code>
                   </div>
                 </div>
               </div>
